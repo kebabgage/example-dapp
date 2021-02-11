@@ -1,6 +1,8 @@
 import { useEffect, useState, createContext, useContext } from 'react'
 import { useNetwork } from '../web3'
 import ERC20ABI from './erc20.json';
+import axios from 'axios';
+import ERC721ABI from './erc20.json';
 
 const Context = createContext({});
 
@@ -30,13 +32,49 @@ const Provider =
 
 
 		const fetchPickleBalance = async (address) => {
-			return await contract.methods.balanceOf(address).call()
+			return await contract.methods.balanceOf(address).call();
+		}
+
+		const fetchTokens = async (address, index) => {
+
+			var result;
+			var tokensList = []
+			axios({
+				method: 'get',
+				url: 'https://web3api.io/api/v1/addresses/' + address + '/tokens',
+				headers: {
+					'x-api-key': 'UAKcbfc34f15ddca818e0307f28fa509d65'
+				}
+			}).then(res => 
+			{
+
+				const vals = res.data.payload.records;
+				console.log(vals);
+				return vals;
+				// console.log(vals[0]);
+
+				// result = new Map(vals.map((val, index) => [index, val]))
+				// console.log(result);
+
+				// var i = 0;
+				// Object.keys(res.data.payload.records).forEach(function(key) {
+				// 	if (res.data.payload.records[key].amount !== "0") {
+				// 		tokensList.push(res.data.payload.records[key]);
+				// 	}
+				// })
+
+				
+
+			})
+
+			return result;
 		}
 
 		return <Context.Provider 
 			value={{
 				// expose more methods here to interact with the contract
-				fetchPickleBalance
+				fetchPickleBalance,
+				fetchTokens
 			}}
 			>
 			{children}

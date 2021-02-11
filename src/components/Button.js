@@ -11,6 +11,8 @@ export default styled(
 	}) => {
 		const { status, connect, disconnect, address } = useAccount()
 
+		console.log(address);
+
 		return status === 'CONNECTED'
 			? 	<Button 
 					type='primary'
